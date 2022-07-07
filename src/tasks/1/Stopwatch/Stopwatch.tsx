@@ -1,21 +1,11 @@
-import React, {Component} from "react";
+import React, { useState, useEffect, useRef} from "react";
 
-interface IStopwatchProps {}
+function Stopwatch() {
+    const [status, setStatus] = useState(false)
+    const [runningTime, setRunningTime] = useState(0)
+    const timer = useRef(0)
 
-interface IStopwatchState {
-    status: boolean;
-    runningTime: number;
-}
-
-class Stopwatch extends Component<IStopwatchProps, IStopwatchState> {
-    timer: any;
-
-    state = {
-        status: false,
-        runningTime: 0,
-    };
-
-    getUnits(time: number) {
+    function getUnits(time: number) {
         const seconds = time / 1000;
 
         const min = Math.floor(seconds / 60).toString();
@@ -25,32 +15,34 @@ class Stopwatch extends Component<IStopwatchProps, IStopwatchState> {
         return `${min}:${sec}:${msec}`;
     }
 
-    handleClick = () => {
-        this.setState((state) => {
-            if (state.status) {
-                clearInterval(this.timer);
-            } else {
-                const startTime = Date.now() - this.state.runningTime;
-                this.timer = setInterval(() => {
-                    this.setState({runningTime: Date.now() - startTime});
-                });
-            }
-            return {status: !state.status};
-        });
+    const handleClick = () => {
+        if (status) {
+            clearInterval(timer.current);
+        } else {
+            const startTime = Date.now() - runningTime;
+            timer.current = setInterval(() => {
+                setRunningTime(Date.now() - startTime)
+            });
+        }
+        setStatus(s => !s)
     };
 
-    handleReset = () => {
-        clearInterval(this.timer);
-        this.setState({runningTime: 0, status: false});
+    const handleReset = () => {
+        clearInterval(timer.current);
+        setRunningTime(0)
+        setStatus(false)
     };
 
-    handleLap = () => {
-        console.log(this.getUnits(this.state.runningTime));
+    const handleLap = () => {
+        console.log(getUnits(runningTime));
     };
 
-    componentWillUnmount() {
-        clearInterval(this.timer);
-    }
+    useEffect(() => {
+        return () => {
+            clearInterval(timer.current)
+            console.log('componentWillUnmount')
+        };
+    }, [])
 
     // leftPad = (width, n) => {
     //     if ((n + '').length > width) {
@@ -60,20 +52,17 @@ class Stopwatch extends Component<IStopwatchProps, IStopwatchState> {
     //     return (padding + n).slice(-width);
     // };
 
-    render() {
-        const {status, runningTime} = this.state;
 
-        return (
-            <div>
-                <p>{this.getUnits(runningTime)}</p>
-                <button onClick={this.handleClick}>
-                    {status ? "Stop" : "Start"}
-                </button>
-                <button onClick={this.handleReset}>Reset</button>
-                <button onClick={this.handleLap}>Lap</button>
-            </div>
-        );
-    }
+    return (
+        <div>
+            <p>{getUnits(runningTime)}</p>
+            <button onClick={handleClick}>
+                {status ? "Stop" : "Start"}
+            </button>
+            <button onClick={handleReset}>Reset</button>
+            <button onClick={handleLap}>Lap</button>
+        </div>
+    );
 }
 
 export default Stopwatch;

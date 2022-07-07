@@ -1,0 +1,56 @@
+.c-error {
+  display: inline-block;
+  color: #f00;
+  padding: 15px;
+  margin: 15px;
+  border: 1px solid #f00;
+}
+.c-comment {
+  &_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  &_container {
+    width: 400px;
+    background: #eee;
+    margin: 15px;
+    padding: 15px
+  }
+  &_branch {
+    padding-left: 40px
+  }
+  &_photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-right: 15px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover
+    }
+  }
+  &_name {
+    font-weight: bold;
+  }
+  &_date {
+    font-size: 12px;
+  }
+  &_like {
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+    a {
+      margin-right: 10px;
+    }
+  }
+  &_txt {
+    white-space: pre-line;
+    word-break: break-word;
+    padding-left: 115px;
+    margin: 15px 0;
+  }
+}
